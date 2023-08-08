@@ -1,6 +1,7 @@
 import math
 import pickle
 import random
+import time
 
 import pygame
 
@@ -54,6 +55,7 @@ class Racket:
         self.last_collision = False
         self.is_local = False
         self.image = pygame.image.load("assets/racket.png")
+        self.last_time = time.time()
 
     def update(self, delta_time, ball):
         if self.is_local:
@@ -61,12 +63,14 @@ class Racket:
             self.position[0] = mx
             self.position[1] = my
 
-            self.game.client.client_socket.send(pickle.dumps({
-                "type": "update_racket",
-                "data": {
-                    "position": self.position
-                }
-            }))
+            if time.time() - self.last_time > 1:
+                self.game.client.client_socket.send(pickle.dumps({
+                    "type": "update_racket",
+                    "data": {
+                        "position": self.position
+                    }
+                }))
+                self.last_time = time.time()
 
         distance = math.sqrt(math.pow(ball.position[0] - self.position[0], 2) + math.pow(ball.position[1] - self.position[1], 2))
 
