@@ -20,7 +20,7 @@ class AirHockey:
         self.racket.is_local = True
         self.other_racket = Racket([WIDTH / 2, HEIGHT / 4], self)
 
-        self.client = Client("192.168.2.34", 18769, self)
+        self.client = Client("25.1.245.70", 18769, self)
 
         try:
             self.client.connect()
