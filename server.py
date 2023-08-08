@@ -25,7 +25,13 @@ class Server:
             try:
                 packet = pickle.loads(client_socket.recv(1024))
 
-                self.send_packet(packet, exclude_client=client_socket)
+                packet_type = packet["type"]
+                packet_data = packet["data"]
+
+                if packet_type == "hit_ball":
+                    self.send_packet(packet, exclude_client=client_socket)
+                elif packet_type == "update_racket":
+                    self.send_packet(packet, exclude_client=client_socket)
 
                 print(f"[+] Received packet: {packet}")
             except socket.error:
