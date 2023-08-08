@@ -63,7 +63,7 @@ class Racket:
             self.position[0] = mx
             self.position[1] = my
 
-            if time.time() - self.last_time > 1:
+            if time.time() - self.last_time > 0.05:
                 self.game.client.client_socket.send(pickle.dumps({
                     "type": "update_racket",
                     "data": {
