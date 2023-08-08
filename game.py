@@ -61,12 +61,12 @@ class Racket:
             self.position[0] = mx
             self.position[1] = my
 
-        self.game.client.client_socket.send(pickle.dumps({
-            "type": "update_racket",
-            "data": {
-                "position": self.position
-            }
-        }))
+            self.game.client.client_socket.send(pickle.dumps({
+                "type": "update_racket",
+                "data": {
+                    "position": self.position
+                }
+            }))
 
         distance = math.sqrt(math.pow(ball.position[0] - self.position[0], 2) + math.pow(ball.position[1] - self.position[1], 2))
 
