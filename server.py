@@ -62,5 +62,5 @@ class Server:
 
 
 if __name__ == "__main__":
-    server = Server("localhost", 18769)
+    server = Server("192.168.2.34", 18769)
     server.run()
