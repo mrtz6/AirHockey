@@ -23,7 +23,7 @@ class Client:
                 self.game.ball.position = packet_data["position"]
                 self.game.ball.clack_sound.play()
             elif packet_type == "update_racket":
-                self.game.racket.position = packet_data["position"]
+                print("hi")
 
             print(f"[+] Received packet: {packet}")
 
