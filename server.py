@@ -32,8 +32,6 @@ class Server:
                     self.send_packet(packet, exclude_client=client_socket)
                 elif packet_type == "update_racket":
                     self.send_packet(packet, exclude_client=client_socket)
-
-                print(f"[+] Received packet: {packet}")
             except socket.error:
                 break
 
