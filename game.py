@@ -47,13 +47,13 @@ class Ball:
 
 
 class Racket:
-    def __init__(self, position, game):
+    def __init__(self, position, game, is_local=False):
         self.game = game
         self.position = position
         self.last_position = position
         self.radius = 32
         self.last_collision = False
-        self.is_local = False
+        self.is_local = is_local
         self.image = pygame.image.load("assets/racket.png")
         self.last_time = time.time()
 
@@ -63,7 +63,7 @@ class Racket:
             self.position[0] = mx
             self.position[1] = my
 
-            if time.time() - self.last_time > 0.05:
+            if time.time() - self.last_time > 0.025 and self.position != self.last_position:
                 self.game.client.client_socket.send(pickle.dumps({
                     "type": "update_racket",
                     "data": {

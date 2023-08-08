@@ -1,5 +1,6 @@
 import pickle
 import socket
+from config import HOST, PORT
 from threading import Thread
 
 
@@ -27,14 +28,7 @@ class Server:
 
                 packet = pickle.loads(data)
 
-                packet_type = packet["type"]
-                packet_data = packet["data"]
-
-                if packet_type == "hit_ball":
-                    self.send_packet(packet, exclude_client=client_socket)
-                    print("hit ball")
-                elif packet_type == "update_racket":
-                    self.send_packet(packet, exclude_client=client_socket)
+                self.send_packet(packet, exclude_client=client_socket)
             except socket.error:
                 break
 
@@ -62,5 +56,5 @@ class Server:
 
 
 if __name__ == "__main__":
-    server = Server("25.1.245.70", 18769)
+    server = Server(HOST, PORT)
     server.run()

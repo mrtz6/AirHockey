@@ -13,19 +13,24 @@ class Client:
 
     def _connect_thread(self):
         while True:
-            packet = pickle.loads(self.client_socket.recv(2048))
+            try:
+                packet = pickle.loads(self.client_socket.recv(2048))
 
-            packet_type = packet["type"]
-            packet_data = packet["data"]
+                packet_type = packet["type"]
+                packet_data = packet["data"]
 
-            if packet_type == "hit_ball":
-                self.game.ball.velocity = packet_data["velocity"]
-                self.game.ball.position = packet_data["position"]
-                self.game.ball.clack_sound.play()
-            elif packet_type == "update_racket":
-                self.game.other_racket.position = packet_data["position"]
+                if packet_type == "hit_ball":
+                    self.game.ball.velocity = packet_data["velocity"]
+                    self.game.ball.position = packet_data["position"]
+                    self.game.ball.clack_sound.play()
+                elif packet_type == "update_racket":
+                    self.game.other_racket.position = packet_data["position"]
 
-            print(f"[+] Received packet: {packet}")
+                print(f"[+] Received packet: {packet}")
+            except socket.error:
+                break
+        print("[-] Server disconnected")
+        self.game.running = False
 
     def connect(self):
         self.client_socket.connect((self.host, self.port))
