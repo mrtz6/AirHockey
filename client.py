@@ -13,7 +13,7 @@ class Client:
 
     def _connect_thread(self):
         while True:
-            packet = pickle.loads(self.client_socket.recv(1024))
+            packet = pickle.loads(self.client_socket.recv(2048))
 
             packet_type = packet["type"]
             packet_data = packet["data"]

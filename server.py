@@ -23,13 +23,16 @@ class Server:
     def handle_client(self, client_socket: socket.socket):
         while True:
             try:
-                packet = pickle.loads(client_socket.recv(1024))
+                data = client_socket.recv(2048)
+
+                packet = pickle.loads(data)
 
                 packet_type = packet["type"]
                 packet_data = packet["data"]
 
                 if packet_type == "hit_ball":
                     self.send_packet(packet, exclude_client=client_socket)
+                    print("hit ball")
                 elif packet_type == "update_racket":
                     self.send_packet(packet, exclude_client=client_socket)
             except socket.error:
