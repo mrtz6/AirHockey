@@ -52,12 +52,14 @@ class Racket:
         self.last_position = position
         self.radius = 32
         self.last_collision = False
+        self.is_local = False
         self.image = pygame.image.load("assets/racket.png")
 
     def update(self, delta_time, ball):
-        mx, my = pygame.mouse.get_pos()
-        self.position[0] = mx
-        self.position[1] = my
+        if self.is_local:
+            mx, my = pygame.mouse.get_pos()
+            self.position[0] = mx
+            self.position[1] = my
 
         self.game.client.client_socket.send(pickle.dumps({
             "type": "update_racket",
@@ -82,7 +84,7 @@ class Racket:
                 if racket_power == 0 or racket_power * 200 < ball_speed:
                     factor = ball_speed
                 else:
-                    factor = racket_power * 1000
+                    factor = racket_power * 200
 
                 ball.velocity[0] = math.cos(ball_angle) * factor
                 ball.velocity[1] = math.sin(ball_angle) * factor

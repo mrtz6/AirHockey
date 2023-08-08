@@ -10,14 +10,6 @@ class AirHockey:
     def __init__(self):
         pygame.init()
 
-        self.client = Client("25.1.245.70", 18769, self)
-
-        try:
-            self.client.connect()
-        except ConnectionRefusedError:
-            print("[-] Connection refused. Is the server running?")
-            exit(1)
-
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         self.clock = pygame.time.Clock()
 
@@ -25,6 +17,16 @@ class AirHockey:
 
         self.ball = Ball([WIDTH / 2, HEIGHT / 4])
         self.racket = Racket([WIDTH / 2, HEIGHT / 2], self)
+        self.racket.is_local = True
+        self.other_racket = Racket([WIDTH / 2, HEIGHT / 4], self)
+
+        self.client = Client("25.1.245.70", 18769, self)
+
+        try:
+            self.client.connect()
+        except ConnectionRefusedError:
+            print("[-] Connection refused. Is the server running?")
+            exit(1)
 
         self.running = False
 
@@ -53,6 +55,7 @@ class AirHockey:
         self.ball.draw(self.screen)
 
         self.racket.draw(self.screen)
+        self.other_racket.draw(self.screen)
 
         # self.screen.blit(self.font.render(str(int(self.clock.get_fps())), False, (200, 0, 0)), (8, 0))
 
