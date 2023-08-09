@@ -18,29 +18,7 @@ class Ball:
         self.image = pygame.image.load("assets/ball.png")
 
     def update(self, delta_time):
-        self.position[0] += self.velocity[0] * delta_time
-        self.position[1] += self.velocity[1] * delta_time
-
-        self.velocity[0] *= 0.9975
-        self.velocity[1] *= 0.9975
-
-        if self.position[0] > WIDTH - self.radius:
-            self.velocity[0] *= -1
-            self.position[0] = WIDTH - self.radius
-            self.clack_sound.play()
-        elif self.position[0] < self.radius:
-            self.velocity[0] *= -1
-            self.position[0] = self.radius
-            self.clack_sound.play()
-
-        if self.position[1] > HEIGHT - self.radius:
-            self.velocity[1] *= -1
-            self.position[1] = HEIGHT - self.radius
-            self.clack_sound.play()
-        elif self.position[1] < self.radius:
-            self.velocity[1] *= -1
-            self.position[1] = self.radius
-            self.clack_sound.play()
+        pass
 
     def draw(self, screen):
         screen.blit(self.image, self.image.get_rect(center=self.position))
@@ -56,14 +34,26 @@ class Racket:
         self.is_local = is_local
         self.image = pygame.image.load("assets/racket.png")
         self.last_time = time.time()
+        self.dragging = False
+
+    def mouse_click(self, button):
+        if button == pygame.BUTTON_LEFT:
+            mx, my = pygame.mouse.get_pos()
+
+            if math.sqrt(math.pow(mx - self.position[0], 2) + math.pow(my - self.position[1], 2)) < self.radius:
+                self.dragging = True
+
+    def mouse_release(self, button):
+        if button == pygame.BUTTON_LEFT:
+            self.dragging = False
 
     def update(self, delta_time, ball):
-        if self.is_local:
-            mx, my = pygame.mouse.get_pos()
-            self.position[0] = mx
-            self.position[1] = my
+        mx, my = pygame.mouse.get_pos()
+        if self.is_local and self.dragging:
 
-            if time.time() - self.last_time > 0.025 and self.position != self.last_position:
+            self.position = [mx, my]
+
+            if time.time() - self.last_time > 0.1 and self.position != self.last_position:
                 self.game.client.client_socket.send(pickle.dumps({
                     "type": "update_racket",
                     "data": {

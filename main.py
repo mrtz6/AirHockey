@@ -1,3 +1,5 @@
+import pickle
+
 import pygame
 
 from client import Client
@@ -17,17 +19,17 @@ class AirHockey:
 
         self.ball = Ball([WIDTH / 2, HEIGHT / 4])
         self.local_racket = Racket([WIDTH / 2, HEIGHT / 2], self, is_local=True)
-        self.other_racket = Racket([WIDTH / 2, HEIGHT / 4], self)
+        self.other_racket = Racket([-200, -200], self)
 
         self.client = Client(HOST, PORT, self)
+
+        self.running = False
 
         try:
             self.client.connect()
         except ConnectionRefusedError:
             print("[-] Connection refused. Is the server running?")
             exit(1)
-
-        self.running = False
 
     def run(self):
         self.running = True
@@ -40,7 +42,12 @@ class AirHockey:
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                self.client.client_socket.send(pickle.dumps({"type": "exit", "data": {}}))
                 self.running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                self.local_racket.mouse_click(event.button)
+            if event.type == pygame.MOUSEBUTTONUP:
+                self.local_racket.mouse_release(event.button)
 
     def update(self):
         delta_time = self.clock.tick(FPS) / 1000

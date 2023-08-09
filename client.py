@@ -19,17 +19,19 @@ class Client:
                 packet_type = packet["type"]
                 packet_data = packet["data"]
 
-                if packet_type == "hit_ball":
-                    self.game.ball.velocity = packet_data["velocity"]
-                    self.game.ball.position = packet_data["position"]
-                    self.game.ball.clack_sound.play()
-                elif packet_type == "update_racket":
+                if packet_type == "update_racket":
                     self.game.other_racket.position = packet_data["position"]
+                elif packet_type == "exit":
+                    break
+                elif packet_type == "update_ball":
+                    self.game.ball.position = packet_data["position"]
+                    self.game.ball.velocity = packet_data["velocity"]
 
                 print(f"[+] Received packet: {packet}")
             except socket.error:
-                break
-        print("[-] Server disconnected")
+                pass
+        self.client_socket.close()
+        print("[-] Disconnected from server")
         self.game.running = False
 
     def connect(self):
